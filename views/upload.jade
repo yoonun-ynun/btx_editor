@@ -1,0 +1,39 @@
+doctype html
+
+html
+  head
+  title Loading
+  script(type='text/javascript', src="/socket.io/socket.io.js")
+  script(type='text/javascript', src="/javascripts/loading.js")
+  link(rel="stylesheet", href="/stylesheets/board.css")
+
+  body
+    table
+      tr
+        td(id='file_name')=file 
+        td(id='original_name')=original
+    br
+    table 
+      tr
+        td 사용할 tbl 파일을 선택 해 주세요(개발중) 
+        td
+          input(type="file", id='tbl_file') 
+      tr
+        td
+          button(id='apply', onclick='apply()') 적용
+    br
+    table
+      tr
+        th(scope='col') 원본 텍스트
+        th 변경할 텍스트
+      - for(var i=0; i<text.length; i++){
+      tr
+        td #id #{text[i].id}
+      tr
+        td
+          textarea(name='text', class='original_text', id=text[i].id) #{text[i].text}
+        td
+          textarea(name='text', class='changed_text', id=text[i].id)
+      - }
+    br
+    button(id='submit', onclick='send()') 변경하기
