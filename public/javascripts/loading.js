@@ -5,6 +5,10 @@ function send(){
     var filename = document.getElementById('file_name').innerHTML;
     var original = document.getElementById('original_name').innerHTML;
     var tblFile = document.querySelector('#tbl_file').files[0];
+    if(!tblFile){
+        alert('TBL 파일을 입력해주세요');
+        return;
+    }
 
     var changed = document.querySelectorAll('.changed_text');
     var changed_text = [];
@@ -14,15 +18,27 @@ function send(){
         changed_text.push(obj);
     }
 
+    //TBL 파일 입력
     var reader = new FileReader();
     reader.readAsText(tblFile);
+    reader.onload = function(){
     var result = reader.result;
+
+    //TBL 파일 인덱싱
+    var tbl_file = [];
+    result = result.split('\n');
+    for(var i = 0;i<result.length;i++){
+        var id  = result[i].split('=')[0];
+        var text = result[i].split('=')[1];
+        var obj = {id: id, text: text};
+        tbl_file.push(obj);
+    }
     
 
     formdata.append('file name', filename);
     formdata.append('original name', original);
     formdata.append('changed text', JSON.stringify(changed_text));
-    formdata.append('tbl file', );
+    formdata.append('table', JSON.stringify(tbl_file));
 
     fetch('/build', {
         method: 'POST',
@@ -64,4 +80,5 @@ function send(){
     console.error('Error:', error);
     alert('Error'); 
 });
+    }
 }

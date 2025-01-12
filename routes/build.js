@@ -19,6 +19,10 @@ function TextChange(change, res){
         }
         var result = toArrayBuffer(data).slice(0, 24);
         var data = JSON.parse(change['changed text']);
+        //테이블을 이용해서 인코더 생성
+        var table = JSON.parse(change['table']);
+        var encoder = makeEncoder(table);
+        //헤더 처리
         for(var i = 0;i<data.length;i++){
             console.log(result);
             var dv = new DataView(new ArrayBuffer(4))
@@ -27,17 +31,19 @@ function TextChange(change, res){
             result = appendBuffer(result, dv.buffer);
             result = appendBuffer(result, abuf);
         }
+        //텍스트 처리
         for(var i = 0;i<data.length;i++){
+            //줄바꿈 문자 처리
             data[i].text = data[i].text.replace(/\n/g,'\r\r\n');
+            //포인터 위치 저장
             dv = new DataView(result);
             console.log(result.byteLength);
             dv.setUint32(28+i*8, result.byteLength-((24) + i * 8), true);
-            var table = JSON.parse(change['table']);
-            var encoder = makeEncoder(table);
-
-            var buffer = iconv.encode(data[i].text, 'utf-16le');
+            //인코딩
+            var buffer = encoder.encode(data[i].text).buffer;
             dv.setUint32(0, buffer.byteLength, true);
             toArrayBuffer(buffer);
+            //데이터 저장
             result = appendBuffer(result, buffer);
         }
         var uint8 = new Uint8Array(result);
