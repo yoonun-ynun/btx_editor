@@ -21,6 +21,7 @@ function TextChange(change, res){
         var data = JSON.parse(change['changed text']);
         //테이블을 이용해서 인코더 생성
         var table = JSON.parse(change['table']);
+        console.log(table);
         var encoder = makeEncoder(table);
         //헤더 처리
         for(var i = 0;i<data.length;i++){
@@ -37,7 +38,6 @@ function TextChange(change, res){
             data[i].text = data[i].text.replace(/\n/g,'\r\r\n');
             //포인터 위치 저장
             dv = new DataView(result);
-            console.log(result.byteLength);
             dv.setUint32(28+i*8, result.byteLength-((24) + i * 8), true);
             //인코딩
             var buffer = encoder.encode(data[i].text).buffer;

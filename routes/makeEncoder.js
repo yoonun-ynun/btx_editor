@@ -17,6 +17,10 @@ function make(table=[]){
     encoder.encode = function(text=''){
         var result = [];
         for(var i = 0;i<text.length;i++){
+            if(encode_table[text[i]] == undefined){
+                console.log(text[i]);
+                continue;
+            }
             result.push(encode_table[text[i]]);
         }
         result.push(0x00);
@@ -26,6 +30,10 @@ function make(table=[]){
     encoder.decode = function(data=new Uint16Array()){
         var result = '';
         for(var i = 0;i<data.length;i++){
+            if(decode_table[data[i]] == undefined){
+                console.log(data[i]);
+                continue;
+            }
             result += decode_table[data[i]];
         }
         return result;
