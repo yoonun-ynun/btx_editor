@@ -2,7 +2,7 @@
 ### Build
     sudo docker build . -t btx_editor:latest
 
-### RUN(example for using let's encrypt)
+### RUN(example for using let's encrypt on linux)
     sudo docker run -d \
     -p 443:443 \
     -e DOMAIN={YOUR DOMAIN} \
